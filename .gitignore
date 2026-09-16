@@ -1,0 +1,7 @@
+# Generated ACME program output
+/c64_asc_ubercube.prg
+
+# Local Python and macOS metadata
+__pycache__/
+*.py[cod]
+.DS_Store

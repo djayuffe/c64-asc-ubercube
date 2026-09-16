@@ -1,0 +1,30 @@
+lines=3005 labels=363 duplicate_labels=0 undefined_control_refs=0
+static audit: PASS
+OPT34 closure audit: PASS longest=cube_pu00:135 pairs
+OPT36 hardening audit: PASS
+OPT37 final closure audit: PASS
+OPT38 safe eyecandy audit: PASS
+OPT39 space section-jump audit: PASS
+OPT40 space next-section swap audit: PASS
+OPT41 final release closure audit: PASS
+OPT42 final polish closure audit: PASS
+OPT43 space section/effect/tail swap audit: PASS
+OPT44 perfect section/effect/tail closure audit: PASS
+OPT45 beat zoom in/out audit: PASS
+OPT46 full beat-aware eyecandy audit: PASS
+OPT47 beat-ring eyecandy closure audit: PASS
+OPT48 hyperopt fixed-eyecandy audit: PASS
+OPT49 single-address plot closure audit: PASS
+OPT50 beat-pump grow/shrink audit: PASS
+OPT51 top-section SPACE effect audit: PASS
+OPT52 lead-reactive visual audit: PASS
+OPT53 SPACE section/effect/music jump audit: PASS
+OPT54 SPACE keyboard matrix fix audit: PASS
+OPT55 SPACE jump consumes whole IRQ tick audit: PASS
+OPT56 live top-section sync closure audit: PASS
+OPT57 final audit cleanup audit: PASS
+OPT58 100% closure audit: PASS
+OPT59 beat-spin bidirectional cube audit: PASS
+OPT60 beat-spin 100% closure audit: PASS
+OPT61 ACME branch-range closure audit: PASS
+OPT62 c64_asc_ubercube clean release audit: PASS
