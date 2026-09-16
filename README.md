@@ -1,10 +1,10 @@
-# C64 ASC Uber Cube
+# C64 Padded
 
-C64 ASC Uber Cube is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). It combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
+C64 Padded is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). Its release source is internally named **C64 ASC Uber Cube**; it combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
 
 The code is a compact, buildable release: no external runtime files, no generated source, and no framework beyond the standard C64 hardware and ACME.
 
-![Live VICE capture of C64 ASC Uber Cube](assets/uber-cube-live.png)
+![Live VICE capture of C64 Padded](assets/uber-cube-live.png)
 
 ## Features
 
@@ -59,6 +59,7 @@ AUDIT_FINDINGS.md         Concise audit status and environment notes
 RELEASE_NOTES.md          Release-focused change history
 docs/
   architecture.md         Runtime flow, timing, renderer rules, and data safety
+  development.md          Build, test, and release workflow
 audit_static.py            Static release audit executed by build.sh
 build.sh                   Audit-and-assemble entry point
 c64_asc_ubercube.asm      Complete ACME/6510 source: SID engine and renderer
@@ -81,6 +82,6 @@ During a VICE smoke test, let the cube run through several beats and press `SPAC
 
 The [architecture guide](docs/architecture.md) documents the boot path, IRQ model, music/visual synchronization, safe renderer window, effect data, and the checks enforced by `audit_static.py`.
 
-## License and attribution
+## Release material and attribution
 
-This repository retains the release material included with the project. See [RELEASE_NOTES.md](RELEASE_NOTES.md) and [AUDIT_FINDINGS.md](AUDIT_FINDINGS.md) for the release history and audit scope.
+This repository retains the release material included with the project. See [RELEASE_NOTES.md](RELEASE_NOTES.md) and [AUDIT_FINDINGS.md](AUDIT_FINDINGS.md) for the release history and audit scope. No license file was supplied with the imported source, so reuse terms have not been asserted or inferred.
