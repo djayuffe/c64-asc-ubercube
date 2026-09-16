@@ -12,6 +12,10 @@ The code is a compact, buildable release: no external runtime files, no generate
 
 Native VICE capture of the PRG built from the current release source. The renderer's guarded coordinate window keeps the cube and reactive accents inside the intended visual area.
 
+![Native VICE capture after the BASIC loader and initialization path complete](assets/c64-padded-boot.png)
+
+Boot-validation capture: the PRG was autostarted from its `SYS 2064` BASIC loader and allowed to reach its first rendered frames.
+
 ## Features
 
 - True precomputed XYZ wireframe cube with normal, zoom-in, and rebound frame banks.
@@ -61,6 +65,7 @@ The input is edge-detected and debounced. Keyboard polling only raises a request
 ```text
 assets/
   c64-padded-live.png     Current verified native VICE screenshot used above
+  c64-padded-boot.png     Native VICE capture from the validated boot path
   uber-cube-live.png      Earlier verified release capture
 AUDIT_FINDINGS.md         Concise audit status and environment notes
 RELEASE_NOTES.md          Release-focused change history
