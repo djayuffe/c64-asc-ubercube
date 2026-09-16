@@ -2,9 +2,15 @@
 
 C64 Padded is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). Its release source is internally named **C64 ASC Uber Cube**; it combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
 
+The demo is built for the constraints that make C64 effects compelling: a 1 MHz 6510, VIC-II character graphics, SID music, and a PAL 50 Hz frame cadence. Instead of spending frame time on runtime 3D projection, it selects from precomputed wireframe banks and uses the saved time for clean erase/draw passes, beat-driven size and spin changes, and safe live transitions between musical sections.
+
 The code is a compact, buildable release: no external runtime files, no generated source, and no framework beyond the standard C64 hardware and ACME.
 
-![Live VICE capture of C64 Padded](assets/uber-cube-live.png)
+## Live screenshot
+
+![Native VICE capture of C64 Padded's running wireframe effect](assets/c64-padded-live.png)
+
+Native VICE capture of the PRG built from the current release source. The renderer's guarded coordinate window keeps the cube and reactive accents inside the intended visual area.
 
 ## Features
 
@@ -54,7 +60,8 @@ The input is edge-detected and debounced. Keyboard polling only raises a request
 
 ```text
 assets/
-  uber-cube-live.png      Verified native VICE screenshot used above
+  c64-padded-live.png     Current verified native VICE screenshot used above
+  uber-cube-live.png      Earlier verified release capture
 AUDIT_FINDINGS.md         Concise audit status and environment notes
 RELEASE_NOTES.md          Release-focused change history
 docs/
