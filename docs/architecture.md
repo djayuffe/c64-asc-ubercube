@@ -25,6 +25,20 @@ This bounded queue avoids two failure modes:
 
 The custom `$0314/$0315` handler ends with `JMP $EA31`. This is the KERNAL-compatible tail path after the KERNAL has saved A, X, and Y before calling the vector.
 
+## State ownership
+
+The program separates timing-sensitive state from rendering work. This is the key constraint to preserve when making changes.
+
+| State | Owner | Why |
+| --- | --- | --- |
+| SID registers, music order pointer, and pattern pointers | `play` in the raster IRQ | Music advances at a fixed 50 Hz cadence and must not be interrupted by main-loop work. |
+| `frame_tick` | IRQ produces; main loop consumes | The IRQ saturates at two pending ticks; the main loop decrements one before rendering. |
+| `skip_request` | Main loop produces; IRQ consumes | Keyboard code asks for a transition without mutating active song pointers. |
+| Cube/tail history | Visual main loop | Previous-frame state belongs to the erase/draw pass. |
+| Effect and tail mode | Transition path | Section changes reset/limit these modes before new visual data is drawn. |
+
+This ownership model is why a direct `SPACE` handler must not call music-order routines itself. A transition is a request until the IRQ applies it.
+
 ## Memory and hardware use
 
 | Area | Role |
@@ -65,6 +79,19 @@ The cube is represented as precomputed XY pair streams rather than runtime 3D pr
 5. Draw the current cube stream.
 
 The current cube frame is chosen from the normal/zoom/rebound bank according to the beat envelope. Spin direction and step state select the individual frame within that bank.
+
+### Frame banks and modes
+
+| Data/state | Range | Use |
+| --- | --- | --- |
+| Normal cube frames | 16 streams | Base wireframe rotation poses. |
+| Zoom-in cube frames | 16 streams | Beat-driven grow phase. |
+| Rebound cube frames | 16 streams | Return phase after the beat peak. |
+| `effect_mode` | 0–3 | Chooses the bounded visual accent style. |
+| `tail_mode` | 0–3 | Chooses the bounded cube-tail style. |
+| `cube_spin_dir` / `cube_spin_base_dir` | signed/directional state | Supports beat-driven forward and reverse rotation without changing table bounds. |
+
+The mode values are masked and the streams are guarded because all of these selections become indirect table/data accesses at runtime.
 
 ## Renderer safety rules
 

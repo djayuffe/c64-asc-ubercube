@@ -26,6 +26,28 @@ Boot-validation capture: the PRG was autostarted from its `SYS 2064` BASIC loade
 - KERNAL-safe IRQ chaining through `$EA31`, so the custom `$0314` vector follows the C64 IRQ contract.
 - Static audit script that checks labels, control-flow references, branch-distance risks, renderer bounds, cube-frame data, and release invariants before assembly.
 
+## What the demo does
+
+At startup, the BASIC loader transfers control to the 6510 entry point at `$0810`. The demo initializes the SID voices, clears and prepares the character display, installs a PAL raster IRQ, and enters a small main loop. From then on, the IRQ drives music timing while the main loop renders the cube whenever a new visual tick is available.
+
+The centrepiece is not a general-purpose floating-point 3D engine. The cube's wireframe is stored as compact, precomputed coordinate streams: 16 normal poses, 16 enlarged poses, and 16 rebound poses. The beat envelope selects the appropriate bank, while spin state selects a pose within it. This is a deliberate C64 trade-off: predictable visual timing and clean full-frame updates are more valuable here than calculating projection at runtime.
+
+Music and visuals remain linked without sharing unsafe state. Drum and lead events feed bounded envelopes; the renderer turns those envelopes into zoom, spin, tails, and panel accents. Pressing `SPACE` requests a transition, and the music IRQ applies it at a safe point so order and pattern pointers never race the main loop.
+
+## Runtime model
+
+```text
+BASIC RUN -> SYS 2064 -> init at $0810
+                         |
+                         +-> SID, VIC-II, CIA setup and raster IRQ installation
+                         |
+PAL raster IRQ (50 Hz) -> play music -> queue up to two visual ticks -> KERNAL tail
+                         |
+main loop --------------> consume one tick -> read SPACE -> render frame
+```
+
+The two-tick queue smooths brief main-loop delays without allowing an unlimited rendering backlog. Details of the IRQ contract, memory map, and draw order are in the [architecture guide](docs/architecture.md).
+
 ## Quick start
 
 ### Requirements
@@ -60,6 +82,15 @@ The embedded BASIC loader starts the machine-code entry point at `$0810` (`SYS 2
 
 The input is edge-detected and debounced. Keyboard polling only raises a request; the SID IRQ consumes that request so song pointers cannot be modified concurrently with music playback.
 
+## Compatibility and scope
+
+- **Target:** PAL Commodore 64 timing (50 Hz), 6510 CPU, VIC-II text display, and SID audio.
+- **Emulator:** verified with VICE `x64sc` using a PAL C64 configuration.
+- **Hardware:** the output is a normal C64 PRG and can be loaded with `RUN`; final audio/visual calibration on a physical machine remains the responsibility of the release operator.
+- **Not a library:** this is a compact demo source, not a reusable 3D, music, or game engine.
+
+The project intentionally has no external runtime assets or toolchain lockfile. ACME produces the PRG directly from the checked-in assembly source.
+
 ## Project layout
 
 ```text
@@ -77,6 +108,18 @@ build.sh                   Audit-and-assemble entry point
 c64_asc_ubercube.asm      Complete ACME/6510 source: SID engine and renderer
 ```
 
+## Source tour
+
+| Area | Main labels / files | Purpose |
+| --- | --- | --- |
+| Boot and timing | `init`, `irq`, `main_visual_loop` | Starts the C64 program, schedules music, and hands frame work to the renderer. |
+| Music | `tune_init`, `play`, `next_step`, `next_order` | Maintains order/pattern state and writes SID registers. |
+| Live control | `scan_space_skip`, `skip_to_next_part` | Debounces `SPACE` and applies a safe section/effect transition in the IRQ path. |
+| Visuals | `visual_update` and `visual_*` helpers | Erases the previous frame, draws tails/accents, and streams the next cube pose. |
+| Safety | `audit_static.py` | Checks the contracts that are difficult to spot by eye in a low-level demo. |
+
+The detailed routine ownership and address map live in [docs/architecture.md](docs/architecture.md); the maintainer workflow is in [docs/development.md](docs/development.md).
+
 ## Verification
 
 Run the complete local verification path with:
@@ -88,7 +131,16 @@ git diff --check
 git fsck --no-reflogs
 ```
 
-During a VICE smoke test, let the cube run through several beats and press `SPACE` repeatedly. Confirm that the transition changes section and visuals without leaving stale lines, corrupting the scroller-safe rows, or stalling the soundtrack.
+During a VICE smoke test, let the cube run through several beats and press `SPACE` repeatedly. Confirm that the transition changes section and visuals without leaving stale lines, writing outside the protected display rows, or stalling the soundtrack.
+
+### Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| `acme: command not found` | Install ACME and confirm `command -v acme` returns a path. |
+| `./build.sh: Permission denied` | Restore the executable bit with `chmod +x build.sh audit_static.py`. |
+| VICE opens but does not start the demo | Use `-autostartprgmode 1 -autostart c64_asc_ubercube.prg` after a successful build. |
+| Visual timing differs from the screenshots | Confirm the emulator is configured as a PAL C64 rather than NTSC. |
 
 ## Technical reference
 
@@ -97,3 +149,5 @@ The [architecture guide](docs/architecture.md) documents the boot path, IRQ mode
 ## Release material and attribution
 
 This repository retains the release material included with the project. See [RELEASE_NOTES.md](RELEASE_NOTES.md) and [AUDIT_FINDINGS.md](AUDIT_FINDINGS.md) for the release history and audit scope. No license file was supplied with the imported source, so reuse terms have not been asserted or inferred.
+
+The GitHub repository is named **C64 Padded**. The imported source, audit script, and PRG retain the internal `c64_asc_ubercube` identifier so the proven build path is not changed merely for branding.
