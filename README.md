@@ -1,37 +1,86 @@
-# c64_asc_ubercube
+# C64 ASC Uber Cube
 
-Clean release of the ACME 6502 / Commodore 64 PAL demo formerly developed as Euro Pulsegrid.
+C64 ASC Uber Cube is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). It combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
+
+The code is a compact, buildable release: no external runtime files, no generated source, and no framework beyond the standard C64 hardware and ACME.
+
+![Live VICE capture of C64 ASC Uber Cube](assets/uber-cube-live.png)
 
 ## Features
 
-- PAL 50 Hz music IRQ with KERNAL-safe `$0314` vector tail.
-- True precomputed XYZ wireframe cube.
-- Beat-driven cube grow/shrink zoom.
-- Beat-driven bidirectional cube spin with persistent base direction.
-- Drum- and lead-reactive eyecandy.
-- `SPACE` jumps to the next top-level music section and cycles visual effect, tail mode, and transition mode.
-- No top-line, no border flash, no VU/level overlay.
-- Dirty erase/draw renderer with stream guards and frame-index clamps.
+- True precomputed XYZ wireframe cube with normal, zoom-in, and rebound frame banks.
+- PAL 50 Hz audio/visual cadence: a raster IRQ advances the SID player while the main loop consumes a bounded visual-tick queue.
+- Beat-driven zoom and bidirectional spin, with kick, snare, hat, crash, lift, and lead-note reactive accents.
+- Four bounded visual/tail modes; `SPACE` advances to the next top-level music section and safely switches its visual state.
+- Dirty erase/draw renderer with stream guards, coordinate validation, and a protected top/bottom display area.
+- KERNAL-safe IRQ chaining through `$EA31`, so the custom `$0314` vector follows the C64 IRQ contract.
+- Static audit script that checks labels, control-flow references, branch-distance risks, renderer bounds, cube-frame data, and release invariants before assembly.
 
-## Files
+## Quick start
 
-- `c64_asc_ubercube.asm` — release ACME source.
-- `build.sh` — runs static audit and then ACME.
-- `audit_static.py` — static safety/release audit.
-- `RELEASE_NOTES.md` — release notes.
-- `AUDIT_FINDINGS.md` — audit summary.
+### Requirements
 
-## Build
+- [ACME](https://sourceforge.net/projects/acme-crossass/) on your `PATH`.
+- VICE's `x64sc` command on your `PATH` to run it in an emulator.
 
-```bash
-chmod +x build.sh
+### Build and run
+
+```sh
 ./build.sh
+x64sc -autostartprgmode 1 -autostart c64_asc_ubercube.prg
 ```
 
-Expected output when ACME is installed:
+`build.sh` first runs the static audit, then assembles `c64_asc_ubercube.asm` into `c64_asc_ubercube.prg`. The PRG is intentionally ignored by Git because it is reproducible from source.
+
+### Real C64 hardware
+
+Copy `c64_asc_ubercube.prg` to suitable media, load it, and enter:
+
+```basic
+RUN
+```
+
+The embedded BASIC loader starts the machine-code entry point at `$0810` (`SYS 2064`). The display timing is designed for a PAL C64; it has not been calibrated for NTSC machines.
+
+## Controls
+
+| Key | Action |
+| --- | --- |
+| `SPACE` | Move to the next top-level music section. The change also cycles the visual effect, tail mode, and short music-transition preset. |
+
+The input is edge-detected and debounced. Keyboard polling only raises a request; the SID IRQ consumes that request so song pointers cannot be modified concurrently with music playback.
+
+## Project layout
 
 ```text
-c64_asc_ubercube.prg
+assets/
+  uber-cube-live.png      Verified native VICE screenshot used above
+AUDIT_FINDINGS.md         Concise audit status and environment notes
+RELEASE_NOTES.md          Release-focused change history
+docs/
+  architecture.md         Runtime flow, timing, renderer rules, and data safety
+audit_static.py            Static release audit executed by build.sh
+build.sh                   Audit-and-assemble entry point
+c64_asc_ubercube.asm      Complete ACME/6510 source: SID engine and renderer
 ```
 
-The static audit runs before ACME and checks the most important invariants: branch range patterns, SPACE keyboard matrix, top-section jump, cube bounds, stream guards, no top-line/border writes, beat zoom/spin state, and release cleanup.
+## Verification
+
+Run the complete local verification path with:
+
+```sh
+./audit_static.py c64_asc_ubercube.asm
+./build.sh
+git diff --check
+git fsck --no-reflogs
+```
+
+During a VICE smoke test, let the cube run through several beats and press `SPACE` repeatedly. Confirm that the transition changes section and visuals without leaving stale lines, corrupting the scroller-safe rows, or stalling the soundtrack.
+
+## Technical reference
+
+The [architecture guide](docs/architecture.md) documents the boot path, IRQ model, music/visual synchronization, safe renderer window, effect data, and the checks enforced by `audit_static.py`.
+
+## License and attribution
+
+This repository retains the release material included with the project. See [RELEASE_NOTES.md](RELEASE_NOTES.md) and [AUDIT_FINDINGS.md](AUDIT_FINDINGS.md) for the release history and audit scope.
