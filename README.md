@@ -12,6 +12,12 @@ The code is a compact, buildable release: no external runtime files, no generate
 
 Native VICE capture of the PRG built from the current release source. The renderer's guarded coordinate window keeps the cube and reactive accents inside the intended visual area.
 
+![Fresh PAL VICE runtime capture of the assembled C64 ASC Uber Cube PRG](assets/c64-asc-ubercube-runtime.png)
+
+Fresh PAL VICE runtime capture generated from the current `c64_asc_ubercube.prg`
+after the demo reached its IRQ-driven render loop. It shows a later wireframe
+pose with the bounded rails and beat-reactive spark field.
+
 ![Native VICE capture after the BASIC loader and initialization path complete](assets/c64-asc-ubercube-boot.png)
 
 Boot-validation capture: the PRG was autostarted from its `SYS 2064` BASIC loader and allowed to reach its first rendered frames.
@@ -97,6 +103,7 @@ The project intentionally has no external runtime assets or toolchain lockfile. 
 assets/
   c64-asc-ubercube-live.png Current verified native VICE screenshot used above
   c64-asc-ubercube-boot.png Native VICE capture from the validated boot path
+  c64-asc-ubercube-runtime.png Fresh PAL VICE capture from the current audited PRG
   uber-cube-live.png      Earlier verified release capture
 AUDIT_FINDINGS.md         Concise audit status and environment notes
 RELEASE_NOTES.md          Release-focused change history
