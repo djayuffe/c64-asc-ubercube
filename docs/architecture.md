@@ -1,6 +1,8 @@
 # Architecture guide
 
-This guide describes the implementation in `c64_asc_ubercube.asm`. The repository is named **C64 Padded**; the imported release source retains its internal C64 ASC Uber Cube name. The guide is intentionally tied to that source and its audit rules.
+This guide describes the implementation in `c64_asc_ubercube.asm`, the source
+for **C64 ASC Uber Cube**. The repository, source and output names now align
+with the audited build identity.
 
 ## Runtime overview
 

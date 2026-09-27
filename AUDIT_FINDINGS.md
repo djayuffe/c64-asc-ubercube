@@ -1,4 +1,4 @@
-# C64 Padded Audit Findings
+# C64 ASC Uber Cube audit findings
 
 Static audit status: PASS.
 
@@ -20,4 +20,9 @@ The current maintenance pass ran the complete release path successfully:
 - VICE PAL run — PASS; the repository screenshot is a native capture of the assembled PRG.
 - `git diff --check` and `git fsck --no-reflogs` — PASS.
 
-The repository is named **C64 Padded**. The imported release source and generated PRG deliberately retain their internal `c64_asc_ubercube` names to avoid an unverified source-level rename.
+## Naming audit
+
+The project is correctly named **C64 ASC Uber Cube** because its complete,
+audited ACME source and output use `c64_asc_ubercube`. The repository slug is
+therefore `c64-asc-ubercube`. Screenshot assets use the same identity; no
+runtime or build filename was changed during the repository rename.

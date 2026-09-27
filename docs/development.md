@@ -1,6 +1,8 @@
 # Development and release guide
 
-This guide is for maintainers of C64 Padded. The repository name is C64 Padded, while the imported ACME source and build product intentionally retain the stable `c64_asc_ubercube` identifier.
+This guide is for maintainers of **C64 ASC Uber Cube**. The repository, ACME
+source and build product intentionally share the stable `c64_asc_ubercube`
+identifier.
 
 ## Prerequisites
 

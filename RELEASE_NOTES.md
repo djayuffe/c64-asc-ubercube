@@ -1,4 +1,4 @@
-# c64_asc_ubercube Release Notes
+# C64 ASC Uber Cube release notes
 
 ## Clean release changes
 

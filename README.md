@@ -1,6 +1,6 @@
-# C64 Padded
+# C64 ASC Uber Cube
 
-C64 Padded is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). Its release source is internally named **C64 ASC Uber Cube**; it combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
+C64 ASC Uber Cube is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). It combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
 
 The demo is built for the constraints that make C64 effects compelling: a 1 MHz 6510, VIC-II character graphics, SID music, and a PAL 50 Hz frame cadence. Instead of spending frame time on runtime 3D projection, it selects from precomputed wireframe banks and uses the saved time for clean erase/draw passes, beat-driven size and spin changes, and safe live transitions between musical sections.
 
@@ -8,11 +8,11 @@ The code is a compact, buildable release: no external runtime files, no generate
 
 ## Live screenshot
 
-![Native VICE capture of C64 Padded's running wireframe effect](assets/c64-padded-live.png)
+![Native VICE capture of C64 ASC Uber Cube's running wireframe effect](assets/c64-asc-ubercube-live.png)
 
 Native VICE capture of the PRG built from the current release source. The renderer's guarded coordinate window keeps the cube and reactive accents inside the intended visual area.
 
-![Native VICE capture after the BASIC loader and initialization path complete](assets/c64-padded-boot.png)
+![Native VICE capture after the BASIC loader and initialization path complete](assets/c64-asc-ubercube-boot.png)
 
 Boot-validation capture: the PRG was autostarted from its `SYS 2064` BASIC loader and allowed to reach its first rendered frames.
 
@@ -95,8 +95,8 @@ The project intentionally has no external runtime assets or toolchain lockfile. 
 
 ```text
 assets/
-  c64-padded-live.png     Current verified native VICE screenshot used above
-  c64-padded-boot.png     Native VICE capture from the validated boot path
+  c64-asc-ubercube-live.png Current verified native VICE screenshot used above
+  c64-asc-ubercube-boot.png Native VICE capture from the validated boot path
   uber-cube-live.png      Earlier verified release capture
 AUDIT_FINDINGS.md         Concise audit status and environment notes
 RELEASE_NOTES.md          Release-focused change history
@@ -150,4 +150,6 @@ The [architecture guide](docs/architecture.md) documents the boot path, IRQ mode
 
 This repository retains the release material included with the project. See [RELEASE_NOTES.md](RELEASE_NOTES.md) and [AUDIT_FINDINGS.md](AUDIT_FINDINGS.md) for the release history and audit scope. No license file was supplied with the imported source, so reuse terms have not been asserted or inferred.
 
-The GitHub repository is named **C64 Padded**. The imported source, audit script, and PRG retain the internal `c64_asc_ubercube` identifier so the proven build path is not changed merely for branding.
+The repository and the audited source use the same stable identity:
+**C64 ASC Uber Cube** / `c64-asc-ubercube`. The PRG remains
+`c64_asc_ubercube.prg`, matching the ACME source and reproducible build path.
