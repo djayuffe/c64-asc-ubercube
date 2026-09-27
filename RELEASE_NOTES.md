@@ -1,5 +1,17 @@
 # C64 ASC Uber Cube release notes
 
+## v1.1.0 — 2026-09-27
+
+- Renamed the public project and GitHub repository to `c64-asc-ubercube`, the
+  identity already used by the audited ACME source and PRG.
+- Added a fresh PAL VICE runtime screenshot built from the current source.
+- Added GitHub Actions CI: ACME install, static audit, PRG build, `$0801`
+  load-address verification and downloadable workflow artifact.
+- Added `docs/technical-reference.md` with the IRQ contract, memory map,
+  music/visual synchronization, renderer data model, audit guarantees and
+  target limits.
+- Updated public repository description and discovery topics.
+
 ## Clean release changes
 
 - Renamed project, source, and PRG output to `c64_asc_ubercube`.

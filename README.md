@@ -1,5 +1,7 @@
 # C64 ASC Uber Cube
 
+[![Build and audit](https://github.com/djayuffe/c64-asc-ubercube/actions/workflows/ci.yml/badge.svg)](https://github.com/djayuffe/c64-asc-ubercube/actions/workflows/ci.yml)
+
 C64 ASC Uber Cube is a self-contained Commodore 64 PAL demo written in 6510 assembly for the [ACME assembler](https://sourceforge.net/projects/acme-crossass/). It combines a three-voice SID soundtrack with a precomputed XYZ wireframe cube, beat-reactive visual accents, and live section changes.
 
 The demo is built for the constraints that make C64 effects compelling: a 1 MHz 6510, VIC-II character graphics, SID music, and a PAL 50 Hz frame cadence. Instead of spending frame time on runtime 3D projection, it selects from precomputed wireframe banks and uses the saved time for clean erase/draw passes, beat-driven size and spin changes, and safe live transitions between musical sections.
@@ -151,7 +153,15 @@ During a VICE smoke test, let the cube run through several beats and press `SPAC
 
 ## Technical reference
 
-The [architecture guide](docs/architecture.md) documents the boot path, IRQ model, music/visual synchronization, safe renderer window, effect data, and the checks enforced by `audit_static.py`.
+The [architecture guide](docs/architecture.md) documents the boot path, IRQ model, music/visual synchronization, safe renderer window, effect data, and the checks enforced by `audit_static.py`. The [technical reference](docs/technical-reference.md) provides the exact execution contracts, memory map, SID/visual relationship, precomputed frame model, and CI verification steps.
+
+## Continuous integration and release artifacts
+
+Every push and pull request runs the GitHub Actions **Build and audit**
+workflow. It installs ACME, runs the full static audit, builds the PRG,
+verifies the `$0801` load address, and publishes `c64_asc_ubercube.prg` as a
+workflow artifact. Tagged releases attach the same reproducible PRG as a
+downloadable release asset.
 
 ## Release material and attribution
 

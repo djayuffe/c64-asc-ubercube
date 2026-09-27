@@ -1,0 +1,55 @@
+name: Build and audit C64 ASC Uber Cube
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit-and-build:
+    name: Static audit and ACME build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ACME assembler
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes acme
+
+      - name: Run static release audit
+        run: python3 audit_static.py c64_asc_ubercube.asm
+
+      - name: Build PRG
+        run: ./build.sh
+
+      - name: Verify PRG contract
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          program = Path("c64_asc_ubercube.prg").read_bytes()
+          if len(program) < 3:
+              raise SystemExit("PRG is unexpectedly short")
+          if program[:2] != b"\x01\x08":
+              raise SystemExit(f"unexpected PRG load address: {program[:2].hex()}")
+          print(f"PRG verified: {len(program)} bytes, load address $0801")
+          PY
+
+      - name: Upload PRG artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: c64-asc-ubercube-prg
+          path: c64_asc_ubercube.prg
+          if-no-files-found: error
